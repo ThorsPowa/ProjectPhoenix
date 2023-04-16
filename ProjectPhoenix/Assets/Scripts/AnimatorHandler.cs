@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace NW
 {
- public class AnimatorHandler : MonoBehaviour
+    public class AnimatorHandler : MonoBehaviour
     {
         PlayerManager playerManager;
         public Animator anim;
@@ -104,6 +104,16 @@ namespace NW
             canRotate = false;
         }
 
+        public void EnableCombo()
+        {
+            anim.SetBool("canDoCombo", true);
+        }
+
+        public void DisableCombo()
+        {
+            anim.SetBool("canDoCombo", false);
+        }
+
         private void OnAnimatorMove()
         {
             if (playerManager.isInteracting == false)
@@ -119,4 +129,3 @@ namespace NW
 
     }
 }
-
