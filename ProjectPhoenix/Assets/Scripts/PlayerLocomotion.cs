@@ -1,7 +1,6 @@
-using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace NW
 {
@@ -12,24 +11,35 @@ namespace NW
         InputHandler inputHandler;
         public Vector3 moveDirection;
 
-        [HideInInspector] public Transform myTransform;
-        [HideInInspector] public AnimatorHandler animatorHandler;
+        [HideInInspector]
+        public Transform myTransform;
+        [HideInInspector]
+        public AnimatorHandler animatorHandler;
+
         public new Rigidbody rigidbody;
         public GameObject normalCamera;
 
         [Header("Ground & Air Detection Stats")]
-        [SerializeField] float groundDetectionRayStartPoint = 0.5f;
-        [SerializeField] float minimumDistanceNeededToBeginFall = 1f;
-        [SerializeField] float groundDirectionRayDistance = 0.2f;
+        [SerializeField]
+        float groundDetectionRayStartPoint = 0.5f;
+        [SerializeField]
+        float minimumDistanceNeededToBeginFall = 1f;
+        [SerializeField]
+        float groundDirectionRayDistance = 0.2f;
         LayerMask ignoreForGroundCheck;
         public float inAirTimer;
 
         [Header("Movement Stats")]
-        [SerializeField] float movementSpeed = 5;
-        [SerializeField]float walkingSpeed = 1;
-        [SerializeField]float sprintSpeed = 7;
-        [SerializeField]float rotationSpeed = 10;
-        [SerializeField]float fallingSpeed = 45;
+        [SerializeField]
+        float movementSpeed = 5;
+        [SerializeField]
+        float walkingSpeed = 1;
+        [SerializeField]
+        float sprintSpeed = 7;
+        [SerializeField]
+        float rotationSpeed = 10;
+        [SerializeField]
+        float fallingSpeed = 45;
 
         void Start()
         {
@@ -87,7 +97,7 @@ namespace NW
 
             float speed = movementSpeed;
 
-            if(inputHandler.sprintFlag)
+            if(inputHandler.sprintFlag && inputHandler.moveAmount > 0.5)
             {
                 speed = sprintSpeed;
                 playerManager.isSprinting = true;
@@ -97,11 +107,13 @@ namespace NW
             {
                 if(inputHandler.moveAmount < 0.5)
                 {
-                    moveDirection *= walkingSpeed; 
+                    moveDirection *= walkingSpeed;
+                    playerManager.isSprinting = false;
                 }
                 else
                 {
                     moveDirection *= speed;
+                    playerManager.isSprinting = false;
                 }
             }
 
@@ -182,7 +194,7 @@ namespace NW
                     }
                     else
                     {
-                        animatorHandler.PlayTargetAnimation("Locomotion", false);
+                        animatorHandler.PlayTargetAnimation("Empty", false);
                         inAirTimer = 0;
                     }
 
@@ -210,22 +222,18 @@ namespace NW
                 }
             }
 
-            if(playerManager.isGrounded)
+            if (playerManager.isInteracting || inputHandler.moveAmount > 0)
             {
-                if(playerManager.isInteracting || inputHandler.moveAmount > 0)
-                {
-                    myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime);
-                }
-                else
-                {
-                    myTransform.position = targetPosition;
-                }
+                myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime / 0.1f);
             }
-
+            else
+            {
+                myTransform.position = targetPosition;
+            }
         }
+
+
 
         #endregion
     }
-
 }
-

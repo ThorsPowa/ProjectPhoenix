@@ -1,8 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NW 
+namespace NW
 {
     public class CameraHandler : MonoBehaviour
     {
@@ -31,18 +31,19 @@ namespace NW
         public float cameraCollisionOffSet = 0.2f;
         public float minimumCollisionOffset = 0.2f;
 
+
         private void Awake()
         {
             singleton = this;
             myTransform = transform;
             defaultPosition = cameraTransform.localPosition.z;
             ignoreLayers = ~(1 << 8 | 1 << 9 | 1 << 10);
+            targetTransform = FindObjectOfType<PlayerManager>().transform;
         }
 
         public void FollowTarget(float delta)
         {
-            Vector3 targetPosition = Vector3.SmoothDamp
-                    (myTransform.position, targetTransform.position, ref cameraFollowVelocity, delta / followSpeed);
+            Vector3 targetPosition = Vector3.SmoothDamp(myTransform.position, targetTransform.position, ref cameraFollowVelocity, delta / followSpeed);
             myTransform.position = targetPosition;
 
             HandleCameraCollisions(delta);
@@ -89,7 +90,6 @@ namespace NW
             cameraTransformPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, delta / 0.2f);
             cameraTransform.localPosition = cameraTransformPosition;
         }
+
     }
-
 }
-
